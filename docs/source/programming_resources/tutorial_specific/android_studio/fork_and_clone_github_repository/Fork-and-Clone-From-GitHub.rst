@@ -557,12 +557,6 @@ Remember that Git does not delete commits (with a few exceptions), so in order t
 in reverse order, that you want to undo.  The target of the command below is the tag of the version you want to undo, not the tag of the
 version you want to revert to.
 
-   .. figure:: images/revert.png
-      :align: center
-      :alt: demonstrating the revert
-
-      A new merge commit representing the revert from v8.0 to v7.2.
-
 Because the merge commit has two parents, and you want to reference the SDK version commit, use the tag name you want to roll back and append ^2.  For example to roll back v8.0, resulting in the SDK
 compiling against v7.2 use.
 
@@ -571,6 +565,12 @@ compiling against v7.2 use.
       $ git revert -Xtheirs v8.0^2
 
 The -Xtheirs option is a convenience that says, "If there are any conflicts, automatically take the software from the v8.0^2 side."
+
+   .. figure:: images/revert.png
+      :align: center
+      :alt: demonstrating the revert
+
+      Result of revert - a new merge commit representing the revert from v8.0 to v7.2.
 
 Summary
 -------
