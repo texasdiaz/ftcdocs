@@ -31,7 +31,7 @@ forked repository up to date.
    should never attempt to push changes up to the repo.
 
 A `Clone <https://docs.github.com/en/get-started/quickstart/github-glossary#clone>`_ is a copy of a repository, typically on a local computer. A team
-member creates a `feature branch <https://docs.github.com/en/get-started/quickstart/github-glossary#clone>`_ of the team's repository for feature development, and
+member creates a `feature branch <https://docs.github.com/en/get-started/quickstart/github-glossary#feature-branch>`_ of the team's repository for feature development, and
 clones the branch to a local computer. Software development and testing then
 happens completely within their local clone. Once they're finished, or they've
 reached a checkpoint, the changes within the local clone can then be pushed
@@ -536,7 +536,9 @@ tag^1 is the same as tag^ and is the first parent of the commit, tag^2 is the se
 Merging the Inverse of an SDK Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The diagram below shows the v8.0 tag pointing to the v8.0 merge commit along with references to the parents of v8.0.
+The diagram below shows an example repository structure. The `master` branch tracks the upstream `master`, and the 
+`competition` branch contains merges from `master` and commits from the team. Highlighted are the v8.0 tag pointing to the 
+v8.0 merge commit along with references to the parents of v8.0 (v8.0^1 and v8.0^2).
 
    .. figure:: images/tags.png
       :align: center
@@ -544,33 +546,38 @@ The diagram below shows the v8.0 tag pointing to the v8.0 merge commit along wit
 
       v8.0 tag pointing to the v8.0 merge commit.
 
-.. warning:: If you want to downgrade more than one revision you must revert each revision in sequence otherwise you could wind up
+.. warning:: 
+   If you want to downgrade more than one revision you must revert each revision in sequence otherwise you could wind up
    with changes remaining after reversion from the SDK version in between latest and the target you are referring to.
-   For example if you need to downgrade from v8.1.1 to v8.0 you revert v8.1.1 followed by v8.1.  If you don't follow this order,
-   then changes in v8.1.1 that don't overlap with v8.1 will remain in your workspace and that's not what you want.
+   For example if you need to downgrade from v8.0 to v7.1 you revert v8.0 followed by v7.2.  If you don't follow this order,
+   then changes in v8.0 that don't overlap with v7.2 will remain in your workspace and that's not what you want.
 
-.. important:: If any commits have dependencies on new features or APIs introduced in the reverted versions, then your
+.. important:: 
+   If any commits have dependencies on new features or APIs introduced in the reverted versions, then your
    build will break.  You will have to manually figure out how to fix your software so that it is no longer depends upon
    reverted software.
 
-Remember that Git does not delete commits (with a few exceptions), so in order to revert a commit we must create a new commit that is the inverse of the commit you want to revert *from*.  And you'll want to do this for every version,
-in reverse order, that you want to undo.  The target of the command below is the tag of the version you want to undo, not the tag of the
-version you want to revert to.
-
-Because the merge commit has two parents, and you want to reference the SDK version commit, use the tag name you want to roll back and append ^2.  For example to roll back v8.0, resulting in the SDK
-compiling against v7.2 use.
-
-   .. code-block:: console
-
-      $ git revert -Xtheirs v8.0^2
-
-The -Xtheirs option is a convenience that says, "If there are any conflicts, automatically take the software from the v8.0^2 side."
+Remember that Git does not delete commits (with a few exceptions), so in order to revert a commit you must create a new 
+commit that represents the inverse of the commit you want to revert *from*.  And you'll want to do this for every version,
+in reverse order, that you want to undo. The following image represents the desired outcome in order to roll back v8.0, 
+resulting in the SDK compiling against v7.2. 
 
    .. figure:: images/revert.png
       :align: center
       :alt: demonstrating the revert
 
-      Result of revert - a new merge commit representing the revert from v8.0 to v7.2.
+      Desired merge commit representing a revert from v8.0 to v7.2.
+
+Because the merge commit has two parents, and you want to reference the SDK version commit, use the tag name you want to 
+roll back and append ^2. The target of the command below is the tag of the version you want to undo, not the tag of the
+version you want to revert to.
+
+   .. code-block:: console
+
+      $ git revert -Xtheirs v8.0^2
+
+This creates the inverse v8.0 SDK commit, reverting the v8.0 commit to the `competition` branch. The -Xtheirs option is a 
+convenience that says, "If there are any conflicts, automatically take the software from the v8.0^2 side." 
 
 Summary
 -------
